@@ -8,9 +8,14 @@ function TinderCards() {
     const [people, setPeople] = useState([]);
 
     useEffect(() => {
-        database.collection('people').onSnapshot(snapshot => (
+        const unsubscribe = database.collection('people').onSnapshot(snapshot => (
             setPeople(snapshot.docs.map(doc => doc.data()))
         ))
+
+        return () => {
+            // this will be called everytime before the onSnapshot listener is to be called again
+            unsubscribe();
+        }
     }, [])
 
     return (
